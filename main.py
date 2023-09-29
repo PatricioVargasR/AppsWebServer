@@ -1,3 +1,10 @@
+"""
+    Actividades (TODO):
+        read contactos.csv
+        JSON enconde contactos.csv
+        save in response
+"""
+
 from fastapi import FastAPI
 import csv
 
@@ -18,7 +25,3 @@ def get_contactos():
         for row in lector:
             datos.append(row)
     return datos
-
-    # TODO read contactos.csv
-    # TODO JSON enconde contactos.csv
-    # TODO save in response
