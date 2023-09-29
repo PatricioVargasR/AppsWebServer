@@ -16,6 +16,7 @@ def read_root():
     return {"Hello":"World"}
 
 @app.get("/v1/contactos")
+# async def get_contactos()
 def get_contactos():
     datos = []
     with open('contactos.csv', 'r') as file:
