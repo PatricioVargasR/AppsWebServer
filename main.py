@@ -1,15 +1,15 @@
 """
-    Actividades (TODO):
-        read contactos.csv
-        JSON enconde contactos.csv
-        save in response
+    BaseModel: Nos ayudará a crear una plantilla para nuestros parámetros de envio
+    datetime: Nos ayudará a obtener la fecha y hora actual en que se ejecuta el método
 """
 #from fastapi import FastAPI
 from fastapi import FastAPI, status # Importa la variable de estados
-from pydantic import BaseModel
-from datetime import datetime
-import csv
+from pydantic import BaseModel # Importamos el módulo Base model de pydantic
+# from typing import Optional
+from datetime import datetime # Importamo el módulo datetime
+import csv # Importamos el módulo csv para trabajar con archivos
 
+# Creamos la variable de arranque
 app = FastAPI()
 
 # Creamos una clase modelo
@@ -82,7 +82,9 @@ def get_contactos():
 
 # Forma 2
 @app.post("/v1/contactos", status_code=status.HTTP_201_CREATED, summary="Endpoint para enviar datos")
+# 
 def add_contactos(post:Post):
+    # Agrega la descripición correspondiente
     """
     # Endpoint para enviar datos de la API
 
