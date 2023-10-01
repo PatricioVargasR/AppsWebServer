@@ -6,9 +6,16 @@
 """
 #from fastapi import FastAPI
 from fastapi import FastAPI, status # Importa la variable de estados
+from pydantic import BaseModel
+from datetime import datetime
 import csv
 
 app = FastAPI()
+
+# Creamos una clase modelo
+class Post(BaseModel):
+    nombre: str
+    email: str
 
 # @app.get("/") # Asignación predeterminada
 # @app.get("/", status_code=202) # Asignación sin librería, solo poniendo el número
@@ -36,14 +43,59 @@ def read_root():
     """
     return {"Hello":"World"}
 
-@app.get("/v1/contactos")
-# async def get_contactos()
+@app.get("/v1/contactos", status_code=status.HTTP_200_OK, summary="Endpoint para listar datos")
 def get_contactos():
+    """
+    # Endpoint para obtener datos de la API
+
+    ## 1.- Status codes:
+    * 200 - Código de confirmación
+    """
     datos = []
     with open('contactos.csv', 'r') as file:
-        # fildnames = ('nombre', 'email')
-        # lector = csv.DictReader(file, fildnames)
         lector = csv.DictReader(file)
         for row in lector:
             datos.append(row)
     return datos
+
+# Forma 1
+
+# @app.post("/v1/contactos", status_code=status.HTTP_201_CREATED, summary="Endpoint para enviar datos")
+# def add_contactos(nombre:str, email:str):
+    """
+    # Endpoint para enviar datos de la API
+
+    ## 1.- Status codes:
+    * 201 - Código de confirmación de agregar nuevo elemento
+
+    ## 2.- Data:
+    * nombre: str
+    * email: str
+    """
+#    with open('contactos.csv', 'a', newline="") as file:
+#        fieldnames = ["nombre", "email"]
+#        writer = csv.DictWriter(file, fieldnames=fieldnames)
+#        row = {"nombre": nombre, "email": email}  #  Uso de diccionario
+#        writer.writerow(row)
+#    return row, {"datetime":datetime.now()}  # Mensaje de confirmación
+
+
+# Forma 2
+@app.post("/v1/contactos", status_code=status.HTTP_201_CREATED, summary="Endpoint para enviar datos")
+def add_contactos(post:Post):
+    """
+    # Endpoint para enviar datos de la API
+
+    ## 1.- Status codes:
+    * 201 - Código de confirmación de agregar nuevo elemento
+
+    ## 2.- Data:
+    * nombre: str
+    * email: str
+    """
+    with open('contactos.csv', 'a', newline="") as file:
+        fieldnames = ["nombre", "email"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        row = post.dict() # Uso de diccionario
+        writer.writerow(row)
+    return row, {"datetime":datetime.now()} # Mensaje de confirmación
