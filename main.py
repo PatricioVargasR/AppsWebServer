@@ -3,7 +3,7 @@
     datetime: Nos ayudará a obtener la fecha y hora actual en que se ejecuta el método
 """
 #from fastapi import FastAPI
-from fastapi import FastAPI, status # Importa la variable de estados
+from fastapi import FastAPI, status, HTTPException # Importa la variable de estados
 from pydantic import BaseModel # Importamos el módulo Base model de pydantic
 # from typing import Optional
 from datetime import datetime # Importamo el módulo datetime
@@ -57,6 +57,22 @@ def get_contactos():
         for row in lector:
             datos.append(row)
     return datos
+
+@app.get("/v1/contactos/{nombre}", status_code=status.HTTP_200_OK, summary="Endpoint para listar datos")
+def get_contactosid(nombre:str):
+    """
+    # Endpoint para obtener datos específicos de la API
+
+    ## 1.- Status codes:
+    * 200 - Código de confirmación
+    * 404 - Código de error
+    """
+    with open('contactos.csv', 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['nombre'] == nombre:
+                return row
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ocurrió un error")
 
 # Forma 1
 
